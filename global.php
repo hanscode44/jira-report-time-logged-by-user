@@ -45,13 +45,15 @@ function getData($key, $period)
         CURLOPT_URL,
         $cfg['jira_host_address'] . "/rest/api/2/search?startIndex=0&jql=" .
         "worklogAuthor=looshan+and+updated+%3E+$fromDate+" .
-        "and+timespent+%3E+0&fields=key&maxResults=10"
+        "and+timespent+%3E+0&fields=key,summary&maxResults=10"
     );
 
     $issues = json_decode(curl_exec($curl), true);
     foreach ($issues['issues'] as $issue) {
 
         $key = $issue['key'];
+        $title = $issue['fields']['summary']; // needed for future addition
+
         # for each issue in result, give me the full worklog for that issue
         curl_setopt(
             $curl,
