@@ -1,13 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: hans
- * Date: 8-5-2017
- * Time: 08:41
- */
 
-function arrayprint($array){
-
+function arrayPrint($array)
+{
     echo "<pre>";
     var_dump($array);
     die;
@@ -70,21 +64,14 @@ function getData($key, $period)
         foreach ($worklog['worklogs'] as $entry) {
             if ($entry['author']['name'] == $cfg['jira_user_email']) {
                 $shortDate = substr($entry['started'], 0, 10);
-
-
                 $startDate = new \DateTime($entry['started']);
 
-                # keep a worklog entry on $key item,
-                # iff within the search time period
                 if ($shortDate >= $fromDate && $shortDate < $toDate) {
-//                    $periodLog[$key]['timespent'][$startDate->format('Y-m-d')][] = $entry['timeSpentSeconds'] / 60;
-                    $periodLog[$key]['timespent'][] = $entry['timeSpentSeconds'] / 60;
+                    $periodLog[$key]['timespent'][$startDate->format('Y-m-d')][] = $entry['timeSpentSeconds'] / 60;
                 }
             }
         }
     }
-
-//    arrayprint($periodLog);
 
     return $periodLog;
 
@@ -101,21 +88,15 @@ function buildRowFromData($data)
     }
 
     $arr = [];
-
     foreach ($data as $i => $issue) {
 
-        $field = $issue['fields'];
-
-        $arr[$i]['key'] = $i;
-//        $arr[$i]['assignee'] = $field['assignee']['displayName'];
-//        $arr[$i]['status'] = $field['status']['name'];
-//        $arr[$i]['priority'] = $field['priority']['name'];
-//        $arr[$i]['summary'] = $field['summary'];
-//        $arr[$i]['time_estimate'] = $field['timeestimate'];
-
         $timespent = 0;
-        foreach ($issue['timespent'] as $ts) {
-            $timespent = $timespent + $ts;
+
+        foreach ($issue['timespent'] as $d => $ts) {
+            foreach ($ts as $entry) {
+                $timespent = $timespent + $entry;
+                $arr[$i]['entry'][$d][]['minutes'] = $entry;
+            }
         }
 
         $arr[$i]['total_time_spent_minutes'] = $timespent;

@@ -105,11 +105,7 @@ if (!empty($_POST)) {
         <thead>
         <tr>
             <th width="150">Key</th>
-            <th>Assignee</th>
-            <th>Status</th>
-            <th>Priority</th>
-            <th>Summary</th>
-            <th>Time Estimated</th>
+            <th width="150">Date</th>
             <th>Total Time Spent (min.)</th>
             <th>Total Time Spent (hrs.)</th>
         </tr>
@@ -120,35 +116,52 @@ if (!empty($_POST)) {
         $total_minutes = 0;
         $total_hours = 0;
 
-        foreach ($rows as $index => $row) { ?>
-
-            <?php
-            $total_minutes = $total_minutes + $row['total_time_spent_minutes'];
-            $total_hours = $total_hours + $row['total_time_spent_hours'];
+        foreach ($rows as $index => $row) {
+            $minutes = 0;
+            $teller = 0;
             ?>
 
             <tr>
-                <td><a href="<?php echo $cfg['jira_host_address'];?>/browse/<?php echo $row['key']; ?>"
-                       target="_blank"><?php echo $row['key']; ?></a></td>
-                <td><?php echo $row['assignee']; ?></td>
-                <td><?php echo $row['status']; ?></td>
-                <td><?php echo $row['priority']; ?></td>
-                <td><?php echo $row['summary']; ?></td>
-                <td><?php echo $row['time_estimate']; ?></td>
-                <td><?php echo round($row['total_time_spent_minutes'], 2); ?></td>
-                <td><?php echo round($row['total_time_spent_hours'], 2); ?></td>
-            </tr>
-        <?php } ?>
+            <td><a href="<?php echo $cfg['jira_host_address']; ?>/browse/<?php echo $index; ?>"
+                   target="_blank"><?php echo $index; ?></a></td>
+
+            <?php
+            foreach ($row['entry'] as $date => $entry) {
+
+                if ($teller != 0) {
+                    ?>
+                    <tr>
+                    <td></td>
+                    <?php
+                }
+                ?>
+
+                <td><?php echo $date; ?></td>
+
+                <?php
+                $entryMinutes = 0;
+                foreach ($entry as $time) {
+                    $entryMinutes = $entryMinutes + $time['minutes'];
+                }
+                ?>
+                <td><?php echo $entryMinutes; ?></td>
+                <td><?php echo round($entryMinutes / 60, 2); ?></td>
+                </tr>
+
+                <?php
+                $total_minutes = $total_minutes + $entryMinutes;
+                $teller++;
+            }
+            ?>
+            <?php
+        }
+        ?>
 
         <tr>
             <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
             <td>Totaal</td>
             <td><?php echo round($total_minutes, 2); ?></td>
-            <td><?php echo round($total_hours, 2); ?></td>
+            <td><?php echo round($total_minutes / 60, 2); ?></td>
         </tr>
 
         </tbody>
