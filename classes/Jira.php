@@ -5,7 +5,7 @@ use Curl\Curl;
 /**
  * Class jira
  */
-class jira
+class Jira
 {
 
     /**
@@ -16,7 +16,6 @@ class jira
     function getData($period)
     {
         global $cfg;
-        global $error;
 
         if ($period == 'today') {
             $startDate = new \DateTime();
