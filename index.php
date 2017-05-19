@@ -140,7 +140,7 @@ if (!empty($_POST)) {
 
                 <tr>
                     <td></td>
-                    <td>Total: </td>
+                   <td>Total: </td>
                     <td><?php echo round($total_minutes, 2); ?></td>
                     <td><?php echo round($total_minutes / 60, 2); ?></td>
                 </tr>
