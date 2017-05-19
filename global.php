@@ -12,10 +12,10 @@ function getData($key, $period)
     global $cfg;
     global $error;
 
-    if ($period == 'vandaag') {
+    if ($period == 'today') {
         $startDate = new \DateTime();
         $endDate = new \DateTime('tomorrow');
-    } else if ($period == 'gisteren') {
+    } else if ($period == 'yesterday') {
         $startDate = new \DateTime('yesterday');
         $endDate = new \DateTime();
     } else if ($period == 'week') {
@@ -30,7 +30,7 @@ function getData($key, $period)
     $toDate = $endDate->format('Y-m-d');
 
     $curl = curl_init();
-    curl_setopt($curl, CURLOPT_USERPWD, $cfg['jira_user_email'] . ':' . $cfg['jira_user_password']);
+    curl_setopt($curl, CURLOPT_USERPWD, $cfg['jira_user_name'] . ':' . $cfg['jira_user_password']);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
@@ -44,7 +44,7 @@ function getData($key, $period)
         $curl,
         CURLOPT_URL,
         $cfg['jira_host_address'] . "/rest/api/2/search?startIndex=0&jql=" .
-        "worklogAuthor=looshan+and+updated+%3E+$fromDate+" .
+        "worklogAuthor=" . $cfg['jira_user_name'] . "+and+updated+%3E+$fromDate+" .
         "and+timespent+%3E+0&fields=key,summary&maxResults=100"
     );
 
@@ -64,7 +64,7 @@ function getData($key, $period)
         $worklog = json_decode(curl_exec($curl), true);
 
         foreach ($worklog['worklogs'] as $entry) {
-            if ($entry['author']['name'] == $cfg['jira_user_email']) {
+            if ($entry['author']['name'] == $cfg['jira_user_name']) {
                 $shortDate = substr($entry['started'], 0, 10);
                 $startDate = new \DateTime($entry['started']);
 
