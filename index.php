@@ -54,18 +54,17 @@ if (!empty($_POST)) {
         <div class="col-lg-12">
             <form method="POST">
                 <div>
-                    <label>Periode
+                    <label>Period:
                         <select name="period">
-                            <option value="vandaag" <?php echo $_POST['period'] == 'vandaag' ? 'selected' : ''; ?>>
-                                Vandaag
+                            <option value="today" <?php echo $_POST['period'] == 'today' ? 'selected' : ''; ?>>
+                                Today
                             </option>
-                            <option value="gisteren" <?php echo $_POST['period'] == 'gisteren' ? 'selected' : ''; ?>>
-                                Gisteren
+                            <option value="yesterday" <?php echo $_POST['period'] == 'yesterday' ? 'selected' : ''; ?>>
+                                Yesterday
                             </option>
-                            <option value="week" <?php echo $_POST['period'] == 'week' ? 'selected' : ''; ?>>Deze week
+                            <option value="week" <?php echo $_POST['period'] == 'week' ? 'selected' : ''; ?>>Current week
                             </option>
-                            <option value="sprint" <?php echo $_POST['period'] == 'sprint' ? 'selected' : ''; ?>>Deze
-                                sprint
+                            <option value="sprint" <?php echo $_POST['period'] == 'sprint' ? 'selected' : ''; ?>>This sprint
                             </option>
                         </select>
                     </label>
@@ -141,7 +140,7 @@ if (!empty($_POST)) {
 
                 <tr>
                     <td></td>
-                    <td>Totaal</td>
+                    <td>Total: </td>
                     <td><?php echo round($total_minutes, 2); ?></td>
                     <td><?php echo round($total_minutes / 60, 2); ?></td>
                 </tr>
