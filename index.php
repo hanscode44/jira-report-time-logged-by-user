@@ -1,20 +1,11 @@
 <?php
 
-
 require 'settings.php';
-require 'global.php';
-
-include "src/autoload.php";
-
-
-session_start();
-$error = "";
+require 'includes/global.php';
 
 if (!empty($_POST)) {
-
     if ($_POST["submit"] === "fetch") {
         $jira = new jira();
-
         $period = $_POST['period'];
         $result = $jira->getData($period);
         $rows = $jira->buildRowFromData($result);
@@ -22,28 +13,15 @@ if (!empty($_POST)) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>JIRA Time overview</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" type="text/css" href="src/bootstrap/dist/css/bootstrap.css">
-    <!-- Optional Bootstrap theme -->
-    <link rel="stylesheet" href="src/bootstrap/dist/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="assets/css/main.css">
-</head>
-<body>
-
 <div class="container">
 
-    <?php if (!empty($error)) { ?>
+    <?php if (!empty($error)) {
+        foreach ($error as $errorItem){
+        ?>
         <div class="row alert alert-danger">
-            <p><?php echo $error ?></p>
+            <p><?php echo $errorItem ?></p>
         </div>
+            <?php } ?>
     <?php } ?>
 
     <div class="row">
@@ -66,7 +44,7 @@ if (!empty($_POST)) {
                             </option>
                         </select>
                     </label>
-                    <button name="submit" class="button-success button-xlarge pure-button" value="fetch">Run Report
+                    <button name="submit" class="btn btn-success" value="fetch">Run Report
                     </button>
                 </div>
             </form>
@@ -152,9 +130,5 @@ if (!empty($_POST)) {
 
 </div>
 
-
-<script src="src/jquery/dist/jquery.min.js"></script>
-<script src="src/bootstrap/dist/js/bootstrap.min.js"></script>
-
-</body>
-</html>
+<?php
+include_once "includes/footer.php";
