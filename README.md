@@ -15,7 +15,7 @@ This is quick solution to JIRA not having an out the box way of reporting time l
 1.  Select a time period.
 2.  Click run report, if all went well you see an overview of logged time. 
 
-![screen shot 2017-03-01 at 14 51 27](https://cloud.githubusercontent.com/assets/2064944/23467579/57ae1512-fe96-11e6-893d-b08615e80811.png)
+
 
 #### What it does
 This tool uses the JIRA REST API, however it requires your username and password for basic authentication, and this user would require permissions to view the project and obtain the data requested - so please be mindful of this fact.

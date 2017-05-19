@@ -26,10 +26,10 @@ if (!empty($_POST)) {
 
     <div class="row">
         <div class="col-lg-12">
-            <form method="POST">
-                <div>
-                    <label>Period:
-                        <select name="period">
+            <form method="POST" class="form-inline">
+                <div class="form-group">
+                    <label><span>Period:</span>
+                        <select name="period" class="form-control">
                             <option value="today" <?php echo $_POST['period'] == 'today' ? 'selected' : ''; ?>>
                                 Today
                             </option>
@@ -44,9 +44,8 @@ if (!empty($_POST)) {
                             </option>
                         </select>
                     </label>
-                    <button name="submit" class="btn btn-success" value="fetch">Run Report
-                    </button>
                 </div>
+                <button type="submit" class="btn btn-success" value="fetch" name="submit">Run report</button>
             </form>
         </div>
     </div>
