@@ -5,7 +5,7 @@ require 'includes/global.php';
 
 if (!empty($_POST)) {
     if ($_POST["submit"] === "fetch") {
-        $jira = new jira();
+        $jira = new Jira();
         $period = $_POST['period'];
         $result = $jira->getData($period);
         $rows = $jira->buildRowFromData($result);
