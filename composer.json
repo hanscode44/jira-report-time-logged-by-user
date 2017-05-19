@@ -11,6 +11,7 @@
     "vendor-dir" : "src"
   },
   "require": {
-    "league/csv": "^8.2"
+    "league/csv": "^8.2",
+    "php-curl-class/php-curl-class": "^7.3"
   }
 }
