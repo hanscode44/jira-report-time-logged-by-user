@@ -1,5 +1,16 @@
 {
-    "require": {
-        "league/csv": "^8.2"
+  "name": "root/jira",
+  "authors": [
+    {
+      "name": "Hans Loos",
+      "email": "hansloos.g1@gmail.com"
     }
+  ],
+  "config": {
+    "bin-dir": "src/vendor/bin",
+    "vendor-dir" : "src"
+  },
+  "require": {
+    "league/csv": "^8.2"
+  }
 }
