@@ -45,7 +45,7 @@ function getData($key, $period)
         CURLOPT_URL,
         $cfg['jira_host_address'] . "/rest/api/2/search?startIndex=0&jql=" .
         "worklogAuthor=looshan+and+updated+%3E+$fromDate+" .
-        "and+timespent+%3E+0&fields=key,summary&maxResults=10"
+        "and+timespent+%3E+0&fields=key,summary&maxResults=100"
     );
 
     $issues = json_decode(curl_exec($curl), true);

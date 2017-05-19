@@ -6,7 +6,8 @@ require 'global.php';
 /**
  * Local Composer
  */
-require 'vendor/autoload.php';
+
+include "src/autoload.php";
 
 session_start();
 $error = "";
@@ -29,146 +30,135 @@ if (!empty($_POST)) {
 <head>
     <meta charset="UTF-8">
     <title>JIRA Time overview</title>
-    <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css"
-          integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
-    <style>
-        body {
-            font-family: Arial, Verdana;
-            padding: 30px
-        }
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        label {
-            margin-top: 50px;
-            width: 360px;
-            font-size: 22px;
-            font-weight: 700;
-            padding-bottom: 10px;
-        }
-
-        input {
-            margin-top: 5px;
-            height: 40px;
-            width: 400px;
-            font-size: 20px;
-            padding-left: 15px;
-            text-transform: uppercase;
-            vertical-align: bottom;
-        }
-
-        button {
-            color: #fff;
-            vertical-align: bottom;
-            height: 46px;
-        }
-
-        .button-success {
-            background: #1cb841;
-            color: #fff;
-        }
-
-        .button-secondary {
-            background: #42b8dd
-        }
-
-        .button-small {
-            font-size: 85%
-        }
-
-        .button-xlarge {
-            font-size: 125%
-        }</style>
+    <link rel="stylesheet" type="text/css" href="src/bootstrap/dist/css/bootstrap.css">
+    <!-- Optional Bootstrap theme -->
+    <link rel="stylesheet" href="src/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
-<?php if (!empty($error)) { ?>
-    <div>
-        <p><?php echo $error ?></p>
+
+<div class="container">
+    <div class="row">
+        <?php if (!empty($error)) { ?>
+            <div class="col-sm-6">
+                <p><?php echo $error ?></p>
+            </div>
+        <?php } ?>
     </div>
-<?php } ?>
 
-<form method="POST">
-    <div>
-        <label>Periode
-            <select name="period">
-                <option value="vandaag">Vandaag</option>
-                <option value="gisteren">Gisteren</option>
-                <option value="week">Deze week</option>
-                <option value="sprint">Deze sprint</option>
-            </select>
-        </label>
-        <button name="submit" class="button-success button-xlarge pure-button" value="fetch">Run Report</button>
+    <div class="row">
+        <div class="col-lg-12">
+            <form method="POST">
+                <div>
+                    <label>Periode
+                        <select name="period">
+                            <option value="vandaag" <?php echo $_POST['period'] == 'vandaag' ? 'selected' : ''; ?>>
+                                Vandaag
+                            </option>
+                            <option value="gisteren" <?php echo $_POST['period'] == 'gisteren' ? 'selected' : ''; ?>>
+                                Gisteren
+                            </option>
+                            <option value="week" <?php echo $_POST['period'] == 'week' ? 'selected' : ''; ?>>Deze week
+                            </option>
+                            <option value="sprint" <?php echo $_POST['period'] == 'sprint' ? 'selected' : ''; ?>>Deze
+                                sprint
+                            </option>
+                        </select>
+                    </label>
+                    <button name="submit" class="button-success button-xlarge pure-button" value="fetch">Run Report
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</form>
 
-<?php if (!empty($rows)) { ?>
-    <hr/>
-    <table class="pure-table pure-table-bordered">
-        <thead>
-        <tr>
-            <th width="150">Key</th>
-            <th width="150">Date</th>
-            <th>Total Time Spent (min.)</th>
-            <th>Total Time Spent (hrs.)</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php
+    <?php if (!empty($rows)) { ?>
+    <div class="row">
+        <hr/>
+        <div class="col-sm-8">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th width="150">Key</th>
+                    <th width="150">Date</th>
+                    <th width="150">Total Time Spent (min.)</th>
+                    <th width="150">Total Time Spent (hrs.)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
 
-        $total_minutes = 0;
-        $total_hours = 0;
+                $total_minutes = 0;
+                $total_hours = 0;
 
-        foreach ($rows as $index => $row) {
-            $minutes = 0;
-            $teller = 0;
-            ?>
-
-            <tr>
-            <td><a href="<?php echo $cfg['jira_host_address']; ?>/browse/<?php echo $index; ?>"
-                   target="_blank"><?php echo $index; ?></a></td>
-
-            <?php
-            foreach ($row['entry'] as $date => $entry) {
-
-                if ($teller != 0) {
+                foreach ($rows as $index => $row) {
+                    $minutes = 0;
+                    $teller = 0;
                     ?>
+
                     <tr>
-                    <td></td>
+                    <td><a href="<?php echo $cfg['jira_host_address']; ?>/browse/<?php echo $index; ?>"
+                           target="_blank"><?php echo $index; ?></a></td>
+
+                    <?php
+                    foreach ($row['entry'] as $date => $entry) {
+
+                        $newDate = new \DateTime($date);
+                        $rowDate = $newDate->format('d-m-Y');
+
+                        if ($teller != 0) {
+                            ?>
+                            <tr>
+                            <td></td>
+                            <?php
+                        }
+                        ?>
+
+                        <td><?php echo $rowDate; ?></td>
+
+                        <?php
+                        $entryMinutes = 0;
+                        foreach ($entry as $time) {
+                            $entryMinutes = $entryMinutes + $time['minutes'];
+                        }
+                        ?>
+                        <td><?php echo $entryMinutes; ?></td>
+                        <td><?php echo round($entryMinutes / 60, 2); ?></td>
+                        </tr>
+
+                        <?php
+                        $total_minutes = $total_minutes + $entryMinutes;
+                        $teller++;
+                    }
+                    ?>
                     <?php
                 }
                 ?>
 
-                <td><?php echo $date; ?></td>
-
-                <?php
-                $entryMinutes = 0;
-                foreach ($entry as $time) {
-                    $entryMinutes = $entryMinutes + $time['minutes'];
-                }
-                ?>
-                <td><?php echo $entryMinutes; ?></td>
-                <td><?php echo round($entryMinutes / 60, 2); ?></td>
+                <tr>
+                    <td></td>
+                    <td>Totaal</td>
+                    <td><?php echo round($total_minutes, 2); ?></td>
+                    <td><?php echo round($total_minutes / 60, 2); ?></td>
                 </tr>
 
-                <?php
-                $total_minutes = $total_minutes + $entryMinutes;
-                $teller++;
-            }
-            ?>
-            <?php
-        }
-        ?>
+                </tbody>
+            </table>
+        </div>
 
-        <tr>
-            <td></td>
-            <td>Totaal</td>
-            <td><?php echo round($total_minutes, 2); ?></td>
-            <td><?php echo round($total_minutes / 60, 2); ?></td>
-        </tr>
+    </div>
+<?php } ?>
 
-        </tbody>
-    </table>
-    <?php
-}
-?>
+</div>
+
+
+
+<script src="src/jquery/dist/jquery.min.js"></script>
+<script src="src/bootstrap/dist/js/bootstrap.min.js"></script>
 
 </body>
 </html>
