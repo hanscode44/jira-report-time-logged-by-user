@@ -8,6 +8,7 @@ This is quick solution to JIRA not having an out the box way of reporting time l
 #### Installation
 1. Clone this GIT repository.
 2. Run `composer install` to install PHP dependencies.
+3. Run `bower install` to install Javascript dependencies.
 3. Rename settings_demo.php to settings.php
 4. Edit the variables inside settings.php to match your own JIRA domain / user login.
 

@@ -1,0 +1,25 @@
+{
+  "name": "jira",
+  "homepage": "https://github.com/hanscode44/jira-report-time-logged-by-user",
+  "authors": [
+    "Hans Loos <hansloos.g1@gmail.com>"
+  ],
+  "description": "jira",
+  "main": "timetracker",
+  "keywords": [
+    "jira"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "src/"
+  ],
+  "dependencies": {
+    "jquery-ui": "^1.12.1",
+    "bootstrap": "^3.3.7"
+  }
+}
