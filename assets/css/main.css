@@ -8,41 +8,9 @@ body {
 }
 
 label {
-    width: 360px;
-    font-size: 22px;
-    font-weight: 700;
-    padding-bottom: 10px;
+    margin-bottom: 0;
 }
 
-input {
-    margin-top: 5px;
-    height: 40px;
-    width: 400px;
-    font-size: 20px;
-    padding-left: 15px;
-    text-transform: uppercase;
-    vertical-align: bottom;
-}
-
-button {
-    color: #fff;
-    vertical-align: bottom;
-    height: 46px;
-}
-
-.button-success {
-    background: #1cb841;
-    color: #fff;
-}
-
-.button-secondary {
-    background: #42b8dd
-}
-
-.button-small {
-    font-size: 85%
-}
-
-.button-xlarge {
-    font-size: 125%
+.row{
+    margin-bottom: 10px;
 }
