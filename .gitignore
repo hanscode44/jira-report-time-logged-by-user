@@ -4,7 +4,4 @@ composer.lock
 /settings.php
 /.idea/
 .idea/workspace.xml
-/bower_components/
-bower.json
-bower_components/
 /src/
