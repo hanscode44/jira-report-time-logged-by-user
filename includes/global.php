@@ -30,9 +30,12 @@ function checkForSettings(){
     }
 }
 
-function arrayPrint($array)
+function arrayPrint($array,$end = false)
 {
     echo "<pre>";
     var_dump($array);
-    die;
+
+    if($end) {
+        die;
+    }
 }

@@ -13,7 +13,7 @@ class Jira
      *
      * @return mixed
      */
-    function getData($period)
+    function getData($period, $startDate = null, $endDate = null)
     {
         global $cfg;
 
@@ -26,9 +26,9 @@ class Jira
         } else if ($period == 'week') {
             $startDate = new \DateTime('monday this week');
             $endDate = new \DateTime('saturday this week');
-        } else {
-            $startDate = new \DateTime('2017-05-01');
-            $endDate = new \DateTime('saturday this week');
+        } else if($period = 'period'){
+            $startDate = new \DateTime($startDate);
+            $endDate = new \DateTime($endDate);
         }
 
         $fromDate = $startDate->format('Y-m-d');
