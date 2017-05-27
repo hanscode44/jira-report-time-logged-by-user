@@ -11,16 +11,20 @@ checkForSettings();
 include_once "header.php";
 
 // set config settings
-autoloader(array(array(
-    'basepath' => '.', // basepath is used to define where your project is located
-    // more config settings here as needed
-)));
+autoloader(
+    array(
+        array(
+            'basepath' => '.', // basepath is used to define where your project is located
+        )
+    )
+);
 
 // now we can set class autoload paths
-autoloader(array(
-    'classes',
-    // more paths here as needed
-));
+autoloader(
+    array(
+        'classes',
+    )
+);
 
 function checkForSettings(){
     global $error;
