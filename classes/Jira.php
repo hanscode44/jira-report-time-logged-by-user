@@ -60,20 +60,26 @@ class Jira
 
             $worklog = json_decode(json_encode($curl->response), true);
 
+            //            $loopcounter = 0;
+
             foreach ($worklog['worklogs'] as $entry) {
+
                 if ($entry['author']['name'] == $cfg['jira_user_name']) {
                     $shortDate = substr($entry['started'], 0, 10);
                     $startDate = new \DateTime($entry['started']);
 
                     if ($shortDate >= $fromDate && $shortDate < $toDate) {
-                        $periodLog[$key]['timespent'][$startDate->format('Y-m-d')][] = $entry['timeSpentSeconds'] / 60;
+	                    $periodLog[$key]['description'] = $title;
+	                    $periodLog[$key]['timespent'][$startDate->format('Y-m-d')]['time'] = $entry['timeSpentSeconds'] / 60;
+//	                    $periodLog[$key]['timespent'][$startDate->format('Y-m-d')][$loopcounter]['time'] = $entry['timeSpentSeconds'] / 60;
+//	                    $periodLog[$key]['timespent'][$startDate->format('Y-m-d')][$loopcounter]['comment'] = 'test';
+//$loopcounter++;
                     }
                 }
             }
         }
 
         $curl->close();
-
         return $periodLog;
 
     }
@@ -105,10 +111,10 @@ class Jira
                 }
             }
 
+            $arr[$i]['description'] = $issue['description'];
             $arr[$i]['total_time_spent_minutes'] = $timespent;
             $arr[$i]['total_time_spent_hours'] = $timespent / 60;
         }
-
         return $arr;
     }
 }
