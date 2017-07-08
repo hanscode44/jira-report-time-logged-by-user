@@ -26,4 +26,9 @@ $(function() {
         $("#datepickers").addClass("hidden");
     }
 
+    $('.entryDetail').on('click', function() {
+        var entryId = $(this).attr('id');
+        $("."+entryId).removeClass('hidden');
+    })
+
 });

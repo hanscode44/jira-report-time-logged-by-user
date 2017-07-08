@@ -7,23 +7,28 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 	$jira   = new Jira();
 	$period = $_POST['period'];
 	$result = $jira->getData( $period, $_POST['startdate'], $_POST['enddate'] );
-	$rows = $jira->buildRowFromData( $result );
+	$rows   = $jira->buildRowFromData( $result );
 }
-
 ?>
 
     <div class="container">
 		<?php if ( ! empty( $rows ) ) { ?>
+
+            <div class="row">
+                <h1>Time spent <?php echo $period; ?></h1>
+            </div>
+
             <div class="row">
                 <div class="col-sm-8">
-                    <table class="table table-striped">
+                    <table class="table">
                         <thead>
                         <tr>
-                            <th width="150">Key</th>
+                            <th width="150">Ticket#</th>
                             <th>Description</th>
                             <th width="150">Date</th>
-                            <th width="150">Total Time Spent (min.)</th>
-                            <th width="150">Total Time Spent (hrs.)</th>
+                            <th width="150"><i class="fa fa-2x fa-clock-o"></i> (min.)</th>
+                            <th width="150"><i class="fa fa-2x fa-clock-o"></i> (hrs.)</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -37,9 +42,9 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 							$teller  = 0;
 
 							?>
-                            <tr>
+                            <tr class="ticket">
                             <td><a href="<?php echo $cfg['jira_host_address']; ?>/browse/<?php echo $index; ?>"
-                                   target="_blank"><?php echo $index; ?></a></td>
+                                   target="_blank"><?php echo $index; ?> <i class="fa fa-external-link"></i> </a></td>
                             <td><?php echo $row['description']; ?></td>
 							<?php
 							foreach ( $row['entry'] as $date => $entry ) {
@@ -51,6 +56,7 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 									?>
                                     <tr>
                                     <td></td>
+                                    <td></td>
 									<?php
 								}
 								?>
@@ -59,15 +65,33 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 
 								<?php
 								$entryMinutes = 0;
+								$entryDetail  = '';
 								foreach ( $entry as $time ) {
-									$entryMinutes = $entryMinutes + $time['minutes'];
+									$entryMinutes     = $entryMinutes + $time['minutes'];
+									$entryDetailClass = $index . "-" . $rowDate;
+									$entryDetail .= "<tr class='hidden " .
+									                $entryDetailClass .
+									                "'><td></td><td colspan='2'>" .
+									                $time['description'] .
+									                "</td><td>" .
+									                $entryMinutes .
+									                "</td><td>" .
+									                round( $entryMinutes / 60, 2 ) .
+									                "</td></tr>";
 								}
 								?>
+
                                 <td><?php echo $entryMinutes; ?></td>
                                 <td><?php echo round( $entryMinutes / 60, 2 ); ?></td>
+                                <td>
+                                    <div id="<?php echo $index; ?>-<?php echo $rowDate; ?>" class="entryDetail"><i
+                                                class="fa fa-plus-square"></i></div>
+                                </td>
                                 </tr>
 
+
 								<?php
+								echo $entryDetail;
 								$total_minutes = $total_minutes + $entryMinutes;
 								$teller ++;
 							}
@@ -76,7 +100,7 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 						}
 						?>
 
-                        <tr>
+                        <tr class="total">
                             <td></td>
                             <td></td>
                             <td>Total:</td>

@@ -60,7 +60,7 @@ class Jira
 
             $worklog = json_decode(json_encode($curl->response), true);
 
-            //            $loopcounter = 0;
+            $loopcounter = 0;
 
             foreach ($worklog['worklogs'] as $entry) {
 
@@ -70,10 +70,9 @@ class Jira
 
                     if ($shortDate >= $fromDate && $shortDate < $toDate) {
 	                    $periodLog[$key]['description'] = $title;
-	                    $periodLog[$key]['timespent'][$startDate->format('Y-m-d')]['time'] = $entry['timeSpentSeconds'] / 60;
-//	                    $periodLog[$key]['timespent'][$startDate->format('Y-m-d')][$loopcounter]['time'] = $entry['timeSpentSeconds'] / 60;
-//	                    $periodLog[$key]['timespent'][$startDate->format('Y-m-d')][$loopcounter]['comment'] = 'test';
-//$loopcounter++;
+	                    $periodLog[$key]['timespent'][$startDate->format('Y-m-d')][$loopcounter]['time'] = $entry['timeSpentSeconds'] / 60;
+	                    $periodLog[$key]['timespent'][$startDate->format('Y-m-d')][$loopcounter]['comment'] = $entry['comment'];
+	                    $loopcounter++;
                     }
                 }
             }
@@ -105,9 +104,13 @@ class Jira
             $timespent = 0;
 
             foreach ($issue['timespent'] as $d => $ts) {
+
+            	$entryCounter = 0;
                 foreach ($ts as $entry) {
-                    $timespent = $timespent + $entry;
-                    $arr[$i]['entry'][$d][]['minutes'] = $entry;
+                    $timespent = $timespent + $entry['time'];
+                    $arr[$i]['entry'][$d][$entryCounter]['minutes'] = $entry['time'];
+	                $arr[$i]['entry'][$d][$entryCounter]['description'] = $entry['comment'];
+	                $entryCounter++;
                 }
             }
 
