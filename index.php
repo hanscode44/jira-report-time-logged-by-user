@@ -77,7 +77,7 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 									                $entryMinutes .
 									                "</td><td>" .
 									                round( $entryMinutes / 60, 2 ) .
-									                "</td></tr>";
+									                "</td><td></td></tr>";
 								}
 								?>
 
@@ -106,6 +106,7 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
                             <td>Total:</td>
                             <td><?php echo round( $total_minutes, 2 ); ?></td>
                             <td><?php echo round( $total_minutes / 60, 2 ); ?></td>
+                            <td></td>
                         </tr>
 
                         </tbody>
