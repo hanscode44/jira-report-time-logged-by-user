@@ -36,18 +36,18 @@
                     <div class="form-group">
                         <label><span>Period:</span>
                             <select name="period" class="form-control" id="periodSelector">
-                                <option value="today" <?php echo $_POST['period'] == 'today' ? 'selected' : ''; ?>>
+                                <option value="today" <?php echo isset($_POST['period']) && $_POST['period'] == 'today' ? 'selected' : ''; ?>>
                                     Today
                                 </option>
-                                <option value="yesterday" <?php echo $_POST['period'] == 'yesterday' ? 'selected' :
+                                <option value="yesterday" <?php echo isset($_POST['period']) && $_POST['period'] == 'yesterday' ? 'selected' :
                                     ''; ?>>
                                     Yesterday
                                 </option>
-                                <option value="week" <?php echo $_POST['period'] == 'week' ? 'selected' : ''; ?>>
+                                <option value="week" <?php echo isset($_POST['period']) && $_POST['period'] == 'week' ? 'selected' : ''; ?>>
                                     Current
                                     week
                                 </option>
-                                <option value="period" <?php echo $_POST['period'] == 'period' ? 'selected' :
+                                <option value="period" <?php echo isset($_POST['period']) && $_POST['period'] == 'period' ? 'selected' :
                                     ''; ?>>Select period
                                 </option>
                             </select>
