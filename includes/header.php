@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="../src/bootstrap/dist/css/bootstrap.css">
     <!-- Optional Bootstrap theme -->
     <link rel="stylesheet" href="../src/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="../src/fortawesome/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../assets/css/main.css">
 </head>
 <body>

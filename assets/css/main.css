@@ -11,6 +11,16 @@ label {
     margin-bottom: 0;
 }
 
-.row{
+.row {
     margin-bottom: 10px;
+}
+
+tr.ticket {
+    background-color: #eff2f7;
+}
+
+tr.total {
+    border: solid;
+    border-color: #9fa1a3;
+    background-color: #dbdcdd;
 }
