@@ -27,8 +27,19 @@ $(function() {
     }
 
     $('.entryDetail').on('click', function() {
-        var entryId = $(this).attr('id');
-        $("."+entryId).removeClass('hidden');
+        var entryId = $(this).closest('td').attr('id');
+        $("."+entryId).toggleClass('hidden');
+        $(this).toggleClass('hidden');
+        $(this).closest('td').find('.entryDetailHide').toggleClass('hidden');
+    });
+
+    $('.entryDetailHide').on('click', function () {
+        var entryId = $(this).closest('td').attr('id');
+        $("."+entryId).toggleClass('hidden');
+        $(this).toggleClass('hidden');
+        $(this).closest('td').find('.entryDetail').toggleClass('hidden');
+
+
     })
 
 });
