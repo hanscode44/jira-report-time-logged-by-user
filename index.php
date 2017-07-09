@@ -8,8 +8,8 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 	$period = $_POST['period'];
 	$result = $jira->getData( $period, $_POST['startdate'], $_POST['enddate'] );
 	$rows   = $jira->buildRowFromData( $result );
-}
-?>
+
+	?>
 
     <div class="container">
 		<?php if ( ! empty( $rows ) ) { ?>
@@ -26,8 +26,8 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
                             <th width="150">Ticket#</th>
                             <th>Description</th>
                             <th width="150">Date</th>
-                            <th width="150"><i class="fa fa-2x fa-clock-o"></i> (min.)</th>
-                            <th width="150"><i class="fa fa-2x fa-clock-o"></i> (hrs.)</th>
+                            <th width="150"><i class="fa fa-clock-o"></i> (min.)</th>
+                            <th width="150"><i class="fa fa-clock-o"></i> (hrs.)</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -74,18 +74,20 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 									                "'><td></td><td colspan='2'>" .
 									                $time['description'] .
 									                "</td><td>" .
-									                $entryMinutes .
+									                $time['minutes'] .
 									                "</td><td>" .
-									                round( $entryMinutes / 60, 2 ) .
+									                round( $time['minutes'] / 60, 2 ) .
 									                "</td><td></td></tr>";
 								}
 								?>
 
                                 <td><?php echo $entryMinutes; ?></td>
                                 <td><?php echo round( $entryMinutes / 60, 2 ); ?></td>
-                                <td>
-                                    <div id="<?php echo $index; ?>-<?php echo $rowDate; ?>" class="entryDetail"><i
+                                <td id="<?php echo $index; ?>-<?php echo $rowDate; ?>">
+                                    <div class="entryDetail"><i
                                                 class="fa fa-plus-square"></i></div>
+                                    <div class="entryDetailHide hidden"><i
+                                                class="fa fa-minus-square"></i></div>
                                 </td>
                                 </tr>
 
@@ -126,5 +128,18 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 		} ?>
 
     </div>
-<?php
+	<?php
+
+} else {
+?>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <p>Please select an period and press submit to get an overview of worked time.</p>
+        </div>
+    </div>
+
+</div>
+  <?php
+}
 include_once "includes/footer.php";
