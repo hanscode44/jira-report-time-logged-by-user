@@ -76,7 +76,7 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 									                "</td><td>" .
 									                $time['minutes'] .
 									                "</td><td>" .
-									                round( $entryMinutes / 60, 2 ) .
+									                round( $time['minutes'] / 60, 2 ) .
 									                "</td><td></td></tr>";
 								}
 								?>
