@@ -24,7 +24,9 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
                         <thead>
                         <tr>
                             <th width="150">Ticket#</th>
+                            <th>Prio</th>
                             <th>Description</th>
+                            <th>Status</th>
                             <th width="150">Date</th>
                             <th width="150"><i class="fa fa-clock-o"></i> (min.)</th>
                             <th width="150"><i class="fa fa-clock-o"></i> (hrs.)</th>
@@ -38,14 +40,16 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 						$total_hours   = 0;
 
 						foreach ( $rows as $index => $row ) {
+
 							$minutes = 0;
 							$teller  = 0;
-
 							?>
                             <tr class="ticket">
                             <td><a href="<?php echo $cfg['jira_host_address']; ?>/browse/<?php echo $index; ?>"
                                    target="_blank"><?php echo $index; ?> <i class="fa fa-external-link"></i> </a></td>
+                            <td><img src="<?php echo $row['priorityImage'];?>" height="18" title="<?php echo $row['priority'];?>"></td>
                             <td><?php echo $row['description']; ?></td>
+                            <td><?php echo $row['status']; ?></td>
 							<?php
 							foreach ( $row['entry'] as $date => $entry ) {
 
@@ -55,6 +59,8 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 								if ( $teller != 0 ) {
 									?>
                                     <tr>
+                                    <td></td>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
 									<?php
@@ -71,7 +77,7 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 									$entryDetailClass = $index . "-" . $rowDate;
 									$entryDetail .= "<tr class='hidden " .
 									                $entryDetailClass .
-									                "'><td></td><td colspan='2'>" .
+									                "'><td></td><td colspan='4'>" .
 									                $time['description'] .
 									                "</td><td>" .
 									                $time['minutes'] .
@@ -103,6 +109,8 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 						?>
 
                         <tr class="total">
+                            <td></td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td>Total:</td>

@@ -42,7 +42,7 @@ class Jira {
 			CURLOPT_URL,
 			$cfg['jira_host_address'] . "/rest/api/2/search?startIndex=0&jql=" .
 			"worklogAuthor=" . $cfg['jira_user_name'] . "+and+updated+%3E+$fromDate+" .
-			"and+timespent+%3E+0&fields=key,summary&maxResults=100"
+			"and+timespent+%3E+0&fields=key,summary,status,priority&maxResults=100"
 		);
 
 		$curl->exec();
@@ -53,6 +53,9 @@ class Jira {
 
 				$key   = $issue['key'];
 				$title = $issue['fields']['summary']; // needed for future addition
+				$status = $issue['fields']['status']['name'];
+				$priority = $issue['fields']['priority']['name'];
+				$priorityImage = $issue['fields']['priority']['iconUrl'];
 
 				$curl->setOpt( CURLOPT_URL, $cfg['jira_host_address'] . "/rest/api/2/issue/$key/worklog" );
 				$curl->exec();
@@ -68,12 +71,12 @@ class Jira {
 						$startDate = new \DateTime( $entry['started'] );
 
 						if ( $shortDate >= $fromDate && $shortDate < $toDate ) {
-							$periodLog[ $key ]['description']                                                           =
-								$title;
-							$periodLog[ $key ]['timespent'][ $startDate->format( 'Y-m-d' ) ][ $loopcounter ]['time']    =
-								$entry['timeSpentSeconds'] / 60;
-							$periodLog[ $key ]['timespent'][ $startDate->format( 'Y-m-d' ) ][ $loopcounter ]['comment'] =
-								$entry['comment'];
+							$periodLog[$key]['description'] = $title;
+							$periodLog[$key]['status'] = $status;
+							$periodLog[$key]['priority'] = $priority;
+							$periodLog[$key]['priorityImage'] = $priorityImage;
+							$periodLog[$key]['timespent'][$startDate->format( 'Y-m-d' )][$loopcounter]['time'] = $entry['timeSpentSeconds'] / 60;
+							$periodLog[$key]['timespent'][$startDate->format( 'Y-m-d' ) ][$loopcounter]['comment'] = $entry['comment'];
 							$loopcounter ++;
 						}
 					}
@@ -117,6 +120,9 @@ class Jira {
 			}
 
 			$arr[ $i ]['description']              = $issue['description'];
+			$arr[ $i ]['status'] = $issue['status'];
+			$arr[ $i ]['priority'] = $issue['priority'];
+			$arr[ $i ]['priorityImage'] = $issue['priorityImage'];
 			$arr[ $i ]['total_time_spent_minutes'] = $timespent;
 			$arr[ $i ]['total_time_spent_hours']   = $timespent / 60;
 		}

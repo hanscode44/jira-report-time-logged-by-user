@@ -1,5 +1,5 @@
-# jira-report-time-logged-by-user
-This is quick solution to JIRA not having an out the box way of reporting time logged per user, instead of just a project. This can be a bit of a road block for project managers. This was never intended to be 100% polished, as it was made quickly and I don't intend on updating this repo unless there is genuine interest, you're welcome to do what you want with it.
+# Jira - Reporting tool to show logged time per user
+This is a quick solution to show the time logged in JIRA, because it's not very easy to do this in JIRA itself. 
 
 #### Requirements
 1. JIRA Cloud
@@ -20,7 +20,10 @@ This is quick solution to JIRA not having an out the box way of reporting time l
 This tool uses the JIRA REST API, however it requires your username and password for basic authentication, and this user would require permissions to view the project and obtain the data requested - so please be mindful of this fact.
 
 #### Future updates
-If you need a feature, feel free to request it (I can try find time to help you), or alternatively submit a pull request.
+If you need a feature, feel free to request it, or alternatively submit a pull request.
+
+### Questions
+If you have any questions, just ask!
 
 #### Disclaimer
 Sorry, I can't be held liable for any problems this script may cause to your system, use at your own peril!
