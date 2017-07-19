@@ -12,6 +12,7 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 	?>
 
     <div class="container">
+        <div class="results">
 		<?php if ( ! empty( $rows ) ) { ?>
 
             <div class="row">
@@ -134,18 +135,21 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 
 			<?php
 		} ?>
-
+        </div>
     </div>
 	<?php
 
 } else {
 ?>
 <div class="container">
+    <div class="results">
     <div class="row">
         <div class="col-lg-12">
             <p>Please select an period and press submit to get an overview of worked time.</p>
         </div>
     </div>
+    </div>
+
 
 </div>
   <?php

@@ -24,6 +24,6 @@ tr.total {
     background-color: #dbdcdd;
 }
 
-.entryDetail, .entryDetailHide{
+.entryDetail, .entryDetailHide {
     cursor: pointer;
 }
