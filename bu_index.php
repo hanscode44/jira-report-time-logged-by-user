@@ -43,9 +43,7 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
 						$totalTicketMinutes = 0;
 
 						foreach ( $rows as $index => $row ) {
-arrayPrint( $index);
-arrayPrint( $row);
-die;
+
 							$minutes = 0;
 							$teller  = 0;
 							?>

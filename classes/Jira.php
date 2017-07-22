@@ -64,6 +64,8 @@ class Jira {
 
 				$loopcounter = 0;
 
+				$totalTicketTime = 0;
+
 				foreach ( $worklog['worklogs'] as $entry ) {
 
 					if ( $entry['author']['name'] == $cfg['jira_user_name'] ) {
@@ -77,10 +79,17 @@ class Jira {
 							$periodLog[$key]['priorityImage'] = $priorityImage;
 							$periodLog[$key]['timespent'][$startDate->format( 'Y-m-d' )][$loopcounter]['time'] = $entry['timeSpentSeconds'] / 60;
 							$periodLog[$key]['timespent'][$startDate->format( 'Y-m-d' ) ][$loopcounter]['comment'] = $entry['comment'];
+
+							$totalTicketTime = $totalTicketTime + $entry['timeSpentSeconds'] / 60;
 							$loopcounter ++;
 						}
 					}
 				}
+
+				if($totalTicketTime > 0) {
+					$periodLog[ $key ]['totalTimeSpent'] = $totalTicketTime;
+				}
+
 			}
 		}
 		$curl->close();
@@ -99,34 +108,28 @@ class Jira {
 
 		if ( empty( $data ) ) {
 			$error = 'Error: Request did not return any results, check login information or project key';
-
 			return false;
 		}
 
 		$arr = [];
 		foreach ( $data as $i => $issue ) {
-
-			$timespent = 0;
-
 			foreach ( $issue['timespent'] as $d => $ts ) {
-
 				$entryCounter = 0;
 				foreach ( $ts as $entry ) {
-					$timespent                                                = $timespent + $entry['time'];
 					$arr[ $i ]['entry'][ $d ][ $entryCounter ]['minutes']     = $entry['time'];
 					$arr[ $i ]['entry'][ $d ][ $entryCounter ]['description'] = $entry['comment'];
 					$entryCounter ++;
 				}
 			}
-
 			$arr[ $i ]['description']              = $issue['description'];
 			$arr[ $i ]['status'] = $issue['status'];
 			$arr[ $i ]['priority'] = $issue['priority'];
 			$arr[ $i ]['priorityImage'] = $issue['priorityImage'];
-			$arr[ $i ]['total_time_spent_minutes'] = $timespent;
-			$arr[ $i ]['total_time_spent_hours']   = $timespent / 60;
+			$arr[ $i]['total_ticket_time'] = $issue['totalTimeSpent'];
 		}
 
+		arrayPrint( $arr);
+		die;
 		return $arr;
 	}
 }
