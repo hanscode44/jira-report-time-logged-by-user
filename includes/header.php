@@ -15,8 +15,11 @@
     <link rel="stylesheet" href="../assets/css/main.css">
 </head>
 <body>
+<div class="container" id="blockUI">
 
+</div>
 <div class="container">
+    <div id="header">
 
     <?php if (!empty($error)) {
         foreach ($error as $errorItem) {
@@ -28,7 +31,7 @@
     <?php } ?>
 
 
-    <form method="POST" class="form-inline">
+    <form method="POST" class="form-inline" id="report">
         <div class="row">
             <div class="col-lg-12">
                 <div class="col-lg-10">
@@ -55,7 +58,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2">
-                    <button type="submit" class="btn btn-success" value="fetch" name="submit">Run report</button>
+                    <button type="submit" class="btn btn-success" value="fetch" name="submit" id="runReport">Run report</button>
                 </div>
             </div>
         </div>
@@ -75,5 +78,6 @@
         </div>
     </form>
     <hr/>
+    </div>
 </div>
 

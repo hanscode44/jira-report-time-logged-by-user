@@ -20,6 +20,7 @@
   ],
   "dependencies": {
     "jquery-ui": "^1.12.1",
-    "bootstrap": "^3.3.7"
+    "bootstrap": "^3.3.7",
+    "blockUI": "2.70"
   }
 }
