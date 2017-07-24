@@ -33,11 +33,30 @@ $(function () {
         $("#datepickers").addClass("hidden");
     }
 
-    $('.entryDetail').on('click', function () {
+    $('.entrySummary').on('click', function () {
+        var entryId = $(this).closest('td').attr('id');
+        $("tr[data-ticket=" + entryId +"]").filter("[data-type=summary]").toggleClass('hidden');
+
+        $(this).toggleClass('hidden');
+        $(this).closest('td').find('.entrySummaryHide').toggleClass('hidden');
+    });
+
+    $('.entrySummaryHide').on('click', function () {
         var entryId = $(this).closest('td').attr('id');
         $("." + entryId).toggleClass('hidden');
         $(this).toggleClass('hidden');
-        $(this).closest('td').find('.entryDetailHide').toggleClass('hidden');
+        $(this).closest('td').find('.entrySummary').toggleClass('hidden');
+    });
+
+    $('.entryDetail').on('click', function () {
+        var entryId = $(this).closest('tr').attr('data-ticket');
+        var entryDate = $(this).closest('tr').attr('data-date');
+        $("tr[data-ticket=" + entryId +"]").filter("[data-date=" + entryDate + "][data-type=detail]").toggleClass('hidden');
+        console.log(entryDate);
+
+        // $("." + entryId).filter("[data-type=detail]").toggleClass('hidden');
+        // $(this).toggleClass('hidden');
+        // $(this).closest('td').find('.entryDetailHide').toggleClass('hidden');
     });
 
     $('.entryDetailHide').on('click', function () {

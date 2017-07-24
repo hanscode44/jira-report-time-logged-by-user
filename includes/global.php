@@ -37,7 +37,7 @@ function checkForSettings(){
 function arrayPrint($array,$end = false)
 {
     echo "<pre>";
-    var_dump($array);
+    print_r($array);
 
     if($end) {
         die;

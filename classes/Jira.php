@@ -114,12 +114,18 @@ class Jira {
 		$arr = [];
 		foreach ( $data as $i => $issue ) {
 			foreach ( $issue['timespent'] as $d => $ts ) {
+
 				$entryCounter = 0;
+				$totalDayTime = 0;
 				foreach ( $ts as $entry ) {
-					$arr[ $i ]['entry'][ $d ][ $entryCounter ]['minutes']     = $entry['time'];
-					$arr[ $i ]['entry'][ $d ][ $entryCounter ]['description'] = $entry['comment'];
+					$arr[ $i ]['entry'][$d]['logentry'][$entryCounter]['spent_time']['minutes']     = $entry['time'];
+					$arr[ $i ]['entry'][$d]['logentry'][$entryCounter]['spent_time']['description'] = $entry['comment'];
+					$totalDayTime = $totalDayTime + $entry['time'];
 					$entryCounter ++;
 				}
+
+				$arr[ $i ]['entry'][ $d ]['total_time'] = $totalDayTime;
+
 			}
 			$arr[ $i ]['description']              = $issue['description'];
 			$arr[ $i ]['status'] = $issue['status'];
@@ -127,9 +133,8 @@ class Jira {
 			$arr[ $i ]['priorityImage'] = $issue['priorityImage'];
 			$arr[ $i]['total_ticket_time'] = $issue['totalTimeSpent'];
 		}
-
-		arrayPrint( $arr);
-		die;
+//arrayPrint( $arr);
+//		die;
 		return $arr;
 	}
 }
