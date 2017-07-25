@@ -19,7 +19,6 @@ $(function () {
 
         if (valueSelected == 'period') {
             $("#datepickers").removeClass("hidden");
-
         } else {
             $("#datepickers").addClass("hidden");
         }
@@ -33,16 +32,38 @@ $(function () {
         $("#datepickers").addClass("hidden");
     }
 
-    $('.entryDetail').on('click', function () {
+    $('.entrySummary').on('click', function () {
         var entryId = $(this).closest('td').attr('id');
-        $("." + entryId).toggleClass('hidden');
+        $("tr[data-ticket=" + entryId +"]").filter("[data-type=summary]").toggleClass('hidden');
+
+        $(this).toggleClass('hidden');
+        $(this).closest('td').find('.entrySummaryHide').toggleClass('hidden');
+    });
+
+    $('.entrySummaryHide').on('click', function () {
+        var entryId = $(this).closest('td').attr('id');
+        var entrySummaryRule = $("tr[data-ticket=" + entryId +"]");
+        entrySummaryRule.addClass('hidden');
+        $(this).toggleClass('hidden');
+        $(this).closest('td').find('.entrySummary').toggleClass('hidden');
+        entrySummaryRule.filter("[data-type=summary]").find('.entryDetail').removeClass('hidden');
+        entrySummaryRule.filter("[data-type=summary]").find('.entryDetailHide').addClass('hidden');
+
+    });
+
+    $('.entryDetail').on('click', function () {
+        var entryId = $(this).closest('tr').attr('data-ticket');
+        var entryDate = $(this).closest('tr').attr('data-date');
+        $("tr[data-ticket=" + entryId +"]").filter("[data-date=" + entryDate + "][data-type=detail]").toggleClass('hidden');
+
         $(this).toggleClass('hidden');
         $(this).closest('td').find('.entryDetailHide').toggleClass('hidden');
     });
 
     $('.entryDetailHide').on('click', function () {
-        var entryId = $(this).closest('td').attr('id');
-        $("." + entryId).toggleClass('hidden');
+        var entryId = $(this).closest('tr').attr('data-ticket');
+        var entryDate = $(this).closest('tr').attr('data-date');
+        $("tr[data-ticket=" + entryId +"]").filter("[data-date=" + entryDate + "][data-type=detail]").addClass('hidden');
         $(this).toggleClass('hidden');
         $(this).closest('td').find('.entryDetail').toggleClass('hidden');
     });
