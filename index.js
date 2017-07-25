@@ -16,6 +16,7 @@ $(function () {
     $('select').on('change', function (e) {
         var optionSelected = $("option:selected", this);
         var valueSelected = this.value;
+
         if (valueSelected == 'period') {
             $("#datepickers").removeClass("hidden");
         } else {
@@ -54,6 +55,7 @@ $(function () {
         var entryId = $(this).closest('tr').attr('data-ticket');
         var entryDate = $(this).closest('tr').attr('data-date');
         $("tr[data-ticket=" + entryId +"]").filter("[data-date=" + entryDate + "][data-type=detail]").toggleClass('hidden');
+
         $(this).toggleClass('hidden');
         $(this).closest('td').find('.entryDetailHide').toggleClass('hidden');
     });

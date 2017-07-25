@@ -130,6 +130,7 @@ if ( ! empty( $_POST ) && $_POST["submit"] === "fetch" ) {
     </div>
 	<?php
 } else {
+
 	?>
     <div class="container">
         <div class="results">
