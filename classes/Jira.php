@@ -52,7 +52,7 @@ class Jira {
 			foreach ( $returnData['issues'] as $issue ) {
 
 				$key   = $issue['key'];
-				$title = $issue['fields']['summary']; // needed for future addition
+				$title = $issue['fields']['summary'];
 				$status = $issue['fields']['status']['name'];
 				$priority = $issue['fields']['priority']['name'];
 				$priorityImage = $issue['fields']['priority']['iconUrl'];
@@ -63,6 +63,8 @@ class Jira {
 				$worklog = json_decode( json_encode( $curl->response ), true );
 
 				$loopcounter = 0;
+
+				$totalTicketTime = 0;
 
 				foreach ( $worklog['worklogs'] as $entry ) {
 
@@ -77,10 +79,17 @@ class Jira {
 							$periodLog[$key]['priorityImage'] = $priorityImage;
 							$periodLog[$key]['timespent'][$startDate->format( 'Y-m-d' )][$loopcounter]['time'] = $entry['timeSpentSeconds'] / 60;
 							$periodLog[$key]['timespent'][$startDate->format( 'Y-m-d' ) ][$loopcounter]['comment'] = $entry['comment'];
+
+							$totalTicketTime = $totalTicketTime + $entry['timeSpentSeconds'] / 60;
 							$loopcounter ++;
 						}
 					}
 				}
+
+				if($totalTicketTime > 0) {
+					$periodLog[ $key ]['totalTimeSpent'] = $totalTicketTime;
+				}
+
 			}
 		}
 		$curl->close();
@@ -99,34 +108,31 @@ class Jira {
 
 		if ( empty( $data ) ) {
 			$error = 'Error: Request did not return any results, check login information or project key';
-
 			return false;
 		}
 
 		$arr = [];
 		foreach ( $data as $i => $issue ) {
-
-			$timespent = 0;
-
 			foreach ( $issue['timespent'] as $d => $ts ) {
 
 				$entryCounter = 0;
+				$totalDayTime = 0;
 				foreach ( $ts as $entry ) {
-					$timespent                                                = $timespent + $entry['time'];
-					$arr[ $i ]['entry'][ $d ][ $entryCounter ]['minutes']     = $entry['time'];
-					$arr[ $i ]['entry'][ $d ][ $entryCounter ]['description'] = $entry['comment'];
+					$arr[ $i ]['entry'][$d]['logentry'][$entryCounter]['spent_time']['minutes']     = $entry['time'];
+					$arr[ $i ]['entry'][$d]['logentry'][$entryCounter]['spent_time']['description'] = $entry['comment'];
+					$totalDayTime = $totalDayTime + $entry['time'];
 					$entryCounter ++;
 				}
-			}
 
+				$arr[ $i ]['entry'][ $d ]['total_time'] = $totalDayTime;
+
+			}
 			$arr[ $i ]['description']              = $issue['description'];
 			$arr[ $i ]['status'] = $issue['status'];
 			$arr[ $i ]['priority'] = $issue['priority'];
 			$arr[ $i ]['priorityImage'] = $issue['priorityImage'];
-			$arr[ $i ]['total_time_spent_minutes'] = $timespent;
-			$arr[ $i ]['total_time_spent_hours']   = $timespent / 60;
+			$arr[ $i]['total_ticket_time'] = $issue['totalTimeSpent'];
 		}
-
 		return $arr;
 	}
 }
