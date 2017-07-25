@@ -52,7 +52,7 @@ class Jira {
 			foreach ( $returnData['issues'] as $issue ) {
 
 				$key   = $issue['key'];
-				$title = $issue['fields']['summary']; // needed for future addition
+				$title = $issue['fields']['summary'];
 				$status = $issue['fields']['status']['name'];
 				$priority = $issue['fields']['priority']['name'];
 				$priorityImage = $issue['fields']['priority']['iconUrl'];
@@ -133,8 +133,6 @@ class Jira {
 			$arr[ $i ]['priorityImage'] = $issue['priorityImage'];
 			$arr[ $i]['total_ticket_time'] = $issue['totalTimeSpent'];
 		}
-//arrayPrint( $arr);
-//		die;
 		return $arr;
 	}
 }
