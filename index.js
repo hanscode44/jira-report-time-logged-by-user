@@ -51,6 +51,32 @@ $(function () {
 
     });
 
+    $('.entryTotalList').on('click', function () {
+        // var entryId = $(this).closest('td').attr('id');
+        // $("tr[data-ticket=" + entryId +"]").filter("[data-type=summary]").toggleClass('hidden');
+console.log('asdfsdfasdf');
+        $(this).toggleClass('hidden');
+        $(this).closest('th').find('.entryTotalListHide').toggleClass('hidden');
+
+        $('.entrySummary').toggleClass('hidden');
+        $('.entryDetail').toggleClass('hidden');
+
+    });
+
+    $('.entryTotalListHide').on('click', function () {
+        // var entryId = $(this).closest('td').attr('id');
+        // var entrySummaryRule = $("tr[data-ticket=" + entryId +"]");
+        // entrySummaryRule.addClass('hidden');
+        $(this).toggleClass('hidden');
+        $(this).closest('th').find('.entryTotalList').toggleClass('hidden');
+        // entrySummaryRule.filter("[data-type=summary]").find('.entryDetail').removeClass('hidden');
+        // entrySummaryRule.filter("[data-type=summary]").find('.entryDetailHide').addClass('hidden');
+
+        $('.entrySummaryHide').toggleClass('hidden');
+        $('.entryDetailHide').toggleClass('hidden');
+
+    });
+
     $('.entryDetail').on('click', function () {
         var entryId = $(this).closest('tr').attr('data-ticket');
         var entryDate = $(this).closest('tr').attr('data-date');
