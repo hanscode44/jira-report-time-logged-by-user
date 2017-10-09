@@ -54,7 +54,6 @@ $(function () {
     $('.entryTotalList').on('click', function () {
         // var entryId = $(this).closest('td').attr('id');
         // $("tr[data-ticket=" + entryId +"]").filter("[data-type=summary]").toggleClass('hidden');
-console.log('asdfsdfasdf');
         $(this).toggleClass('hidden');
         $(this).closest('th').find('.entryTotalListHide').toggleClass('hidden');
 
