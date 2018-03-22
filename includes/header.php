@@ -34,8 +34,7 @@
     <form method="POST" class="form-inline" id="report">
         <div class="row">
             <div class="col-lg-12">
-                <div class="col-lg-10">
-
+                <div class="col-lg-5">
                     <div class="form-group">
                         <label><span>Period:</span>
                             <select name="period" class="form-control" id="periodSelector">
@@ -57,6 +56,7 @@
                         </label>
                     </div>
                 </div>
+                <div class="col-lg-5">naam : <input type="text" name="naam" class="form-control"></div>
                 <div class="col-lg-2">
                     <button type="submit" class="btn btn-success" value="fetch" name="submit" id="runReport">Run report</button>
                 </div>
