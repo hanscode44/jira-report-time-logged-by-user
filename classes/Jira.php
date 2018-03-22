@@ -7,132 +7,137 @@ use Curl\Curl;
  */
 class Jira {
 
-	/**
-	 * @param $period string
-	 *
-	 * @return mixed
-	 */
-	function getData( $period, $startDate = null, $endDate = null ) {
-		global $cfg;
+    /**
+     * @param $period string
+     * @param $person string
+     *
+     * @return mixed
+     */
+    function getData($period, $person = null, $startDate = null, $endDate = null) {
+        global $cfg;
 
-		if ( $period == 'today' ) {
-			$startDate = new \DateTime();
-			$endDate   = new \DateTime( 'tomorrow' );
-		} else if ( $period == 'yesterday' ) {
-			$startDate = new \DateTime( 'yesterday' );
-			$endDate   = new \DateTime();
-		} else if ( $period == 'week' ) {
-			$startDate = new \DateTime( 'monday this week' );
-			$endDate   = new \DateTime( 'saturday this week' );
-		} else if ( $period = 'period' ) {
-			$startDate = new \DateTime( $startDate );
-			$endDate   = new \DateTime( $endDate );
-		}
+        if ($period == 'today') {
+            $startDate = new \DateTime();
+            $endDate = new \DateTime('tomorrow');
+        } else if ($period == 'yesterday') {
+            $startDate = new \DateTime('yesterday');
+            $endDate = new \DateTime();
+        } else if ($period == 'week') {
+            $startDate = new \DateTime('monday this week');
+            $endDate = new \DateTime('saturday this week');
+        } else if ($period = 'period') {
+            $startDate = new \DateTime($startDate);
+            $endDate = new \DateTime($endDate);
+        }
 
-		$fromDate  = $startDate->format( 'Y-m-d' );
-		$toDate    = $endDate->format( 'Y-m-d' );
-		$periodLog = [];
 
-		$curl = new Curl();
-		$curl->setOpt( CURLOPT_USERPWD, $cfg['jira_user_name'] . ':' . $cfg['jira_user_password'] );
-		$curl->setOpt( CURLOPT_FOLLOWLOCATION, true );
-		$curl->setOpt( CURLOPT_RETURNTRANSFER, true );
+        if (!$person) {
+            $username = $cfg['jira_user_name'];
+        } else {
+            $username = $person;
+        }
 
-		$curl->setOpt(
-			CURLOPT_URL,
-			$cfg['jira_host_address'] . "/rest/api/2/search?startIndex=0&jql=" .
-			"worklogAuthor=" . $cfg['jira_user_name'] . "+and+updated+%3E+$fromDate+" .
-			"and+timespent+%3E+0&fields=key,summary,status,priority&maxResults=100"
-		);
+        $fromDate = $startDate->format('Y-m-d');
+        $toDate = $endDate->format('Y-m-d');
+        $periodLog = [];
 
-		$curl->exec();
-		$returnData = json_decode( json_encode( $curl->response ), true );
+        $curl = new Curl();
+        $curl->setOpt(CURLOPT_USERPWD, $cfg['jira_user_name'] . ':' . $cfg['jira_user_password']);
+        $curl->setOpt(CURLOPT_FOLLOWLOCATION, true);
+        $curl->setOpt(CURLOPT_RETURNTRANSFER, true);
 
-		if ( $returnData ) {
-			foreach ( $returnData['issues'] as $issue ) {
+        $curl->setOpt(
+                CURLOPT_URL, $cfg['jira_host_address'] . "/rest/api/2/search?startIndex=0&jql=" .
+                "worklogAuthor=" . $username . "+and+updated+%3E+$fromDate+" .
+                "and+timespent+%3E+0&fields=key,summary,status,priority&maxResults=100"
+        );
 
-				$key   = $issue['key'];
-				$title = $issue['fields']['summary'];
-				$status = $issue['fields']['status']['name'];
-				$priority = $issue['fields']['priority']['name'];
-				$priorityImage = $issue['fields']['priority']['iconUrl'];
+        $curl->exec();
+        $returnData = json_decode(json_encode($curl->response), true);
 
-				$curl->setOpt( CURLOPT_URL, $cfg['jira_host_address'] . "/rest/api/2/issue/$key/worklog" );
-				$curl->exec();
+        if ($returnData) {
+            foreach ($returnData['issues'] as $issue) {
 
-				$worklog = json_decode( json_encode( $curl->response ), true );
+                $key = $issue['key'];
+                $title = $issue['fields']['summary'];
+                $status = $issue['fields']['status']['name'];
+                $priority = $issue['fields']['priority']['name'];
+                $priorityImage = $issue['fields']['priority']['iconUrl'];
 
-				$loopcounter = 0;
+                $curl->setOpt(CURLOPT_URL, $cfg['jira_host_address'] . "/rest/api/2/issue/$key/worklog");
+                $curl->exec();
 
-				$totalTicketTime = 0;
+                $worklog = json_decode(json_encode($curl->response), true);
 
-				foreach ( $worklog['worklogs'] as $entry ) {
+                $loopcounter = 0;
 
-					if ( $entry['author']['name'] == $cfg['jira_user_name'] ) {
-						$shortDate = substr( $entry['started'], 0, 10 );
-						$startDate = new \DateTime( $entry['started'] );
+                $totalTicketTime = 0;
 
-						if ( $shortDate >= $fromDate && $shortDate < $toDate ) {
-							$periodLog[$key]['description'] = $title;
-							$periodLog[$key]['status'] = $status;
-							$periodLog[$key]['priority'] = $priority;
-							$periodLog[$key]['priorityImage'] = $priorityImage;
-							$periodLog[$key]['timespent'][$startDate->format( 'Y-m-d' )][$loopcounter]['time'] = $entry['timeSpentSeconds'] / 60;
-							$periodLog[$key]['timespent'][$startDate->format( 'Y-m-d' ) ][$loopcounter]['comment'] = $entry['comment'];
+                foreach ($worklog['worklogs'] as $entry) {
 
-							$totalTicketTime = $totalTicketTime + $entry['timeSpentSeconds'] / 60;
-							$loopcounter ++;
-						}
-					}
-				}
+                    if ($entry['author']['name'] == $username) {
+                        $shortDate = substr($entry['started'], 0, 10);
+                        $startDate = new \DateTime($entry['started']);
 
-				if($totalTicketTime > 0) {
-					$periodLog[ $key ]['totalTimeSpent'] = $totalTicketTime;
-				}
+                        if ($shortDate >= $fromDate && $shortDate < $toDate) {
+                            $periodLog[$key]['description'] = $title;
+                            $periodLog[$key]['status'] = $status;
+                            $periodLog[$key]['priority'] = $priority;
+                            $periodLog[$key]['priorityImage'] = $priorityImage;
+                            $periodLog[$key]['timespent'][$startDate->format('Y-m-d')][$loopcounter]['time'] = $entry['timeSpentSeconds'] / 60;
+                            $periodLog[$key]['timespent'][$startDate->format('Y-m-d')][$loopcounter]['comment'] = $entry['comment'];
 
-			}
-		}
-		$curl->close();
+                            $totalTicketTime = $totalTicketTime + $entry['timeSpentSeconds'] / 60;
+                            $loopcounter ++;
+                        }
+                    }
+                }
 
-		return $periodLog;
+                if ($totalTicketTime > 0) {
+                    $periodLog[$key]['totalTimeSpent'] = $totalTicketTime;
+                }
+            }
+        }
+        $curl->close();
 
-	}
+        return $periodLog;
+    }
 
-	/**
-	 * @param $data array
-	 *
-	 * @return array|bool
-	 */
-	function buildRowFromData( $data ) {
-		global $error;
+    /**
+     * @param $data array
+     *
+     * @return array|bool
+     */
+    function buildRowFromData($data) {
+        global $error;
 
-		if ( empty( $data ) ) {
-			$error = 'Error: Request did not return any results, check login information or project key';
-			return false;
-		}
+        if (empty($data)) {
+            $error = 'Error: Request did not return any results, check login information or project key';
+            return false;
+        }
 
-		$arr = [];
-		foreach ( $data as $i => $issue ) {
-			foreach ( $issue['timespent'] as $d => $ts ) {
+        $arr = [];
+        foreach ($data as $i => $issue) {
+            foreach ($issue['timespent'] as $d => $ts) {
 
-				$entryCounter = 0;
-				$totalDayTime = 0;
-				foreach ( $ts as $entry ) {
-					$arr[ $i ]['entry'][$d]['logentry'][$entryCounter]['spent_time']['minutes']     = $entry['time'];
-					$arr[ $i ]['entry'][$d]['logentry'][$entryCounter]['spent_time']['description'] = $entry['comment'];
-					$totalDayTime = $totalDayTime + $entry['time'];
-					$entryCounter ++;
-				}
+                $entryCounter = 0;
+                $totalDayTime = 0;
+                foreach ($ts as $entry) {
+                    $arr[$i]['entry'][$d]['logentry'][$entryCounter]['spent_time']['minutes'] = $entry['time'];
+                    $arr[$i]['entry'][$d]['logentry'][$entryCounter]['spent_time']['description'] = $entry['comment'];
+                    $totalDayTime = $totalDayTime + $entry['time'];
+                    $entryCounter ++;
+                }
 
-				$arr[ $i ]['entry'][ $d ]['total_time'] = $totalDayTime;
+                $arr[$i]['entry'][$d]['total_time'] = $totalDayTime;
+            }
+            $arr[$i]['description'] = $issue['description'];
+            $arr[$i]['status'] = $issue['status'];
+            $arr[$i]['priority'] = $issue['priority'];
+            $arr[$i]['priorityImage'] = $issue['priorityImage'];
+            $arr[$i]['total_ticket_time'] = $issue['totalTimeSpent'];
+        }
+        return $arr;
+    }
 
-			}
-			$arr[ $i ]['description']              = $issue['description'];
-			$arr[ $i ]['status'] = $issue['status'];
-			$arr[ $i ]['priority'] = $issue['priority'];
-			$arr[ $i ]['priorityImage'] = $issue['priorityImage'];
-			$arr[ $i]['total_ticket_time'] = $issue['totalTimeSpent'];
-		}
-		return $arr;
-	}
 }
